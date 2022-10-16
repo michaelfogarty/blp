@@ -4,7 +4,7 @@
 #also: need to have a data struct holding x1 and IV (and potentially other stuff)!
 
 #function accepts theta2 and results struct
-function var_cov(theta2, res::Results)
+function var_cov(theta2, res::Results, data::Data)
     @unpack mvalold, ps2, gmmresid = res
     @unpack x1 = data
     N = length(x1[:,1]) #guessing we want the number of observations in x1
