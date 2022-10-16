@@ -1,3 +1,3 @@
-- In our main file, we need to make a data struct to hold the data objects\
-- We need to create a results struct to hold results objects \
-- Overall, need to translate the contents of the binary files iv.mat, ps2.mat, and mvalold.mat. I am not clear on exactly how these were constructed in the first place (obviously with Matlab, but the documentation is opaque as to how to replicate)}
+- In our main file, we need to make a data struct to hold the data objects
+- We need to create a results struct to hold results objects 
+- Overall, need to translate the contents of the binary files iv.mat, ps2.mat, and mvalold.mat. I am not clear on exactly how these were constructed in the first place (obviously with Matlab, but the documentation is opaque as to how to replicate)
