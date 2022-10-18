@@ -1,6 +1,6 @@
 using Kronecker
 function ind_sh(expmval, expmu, res::Results, data::Data)
-    @unpack ns, cdindex, cdid = data #I am unsure exactly where ns, cdindex, and cdid are defined. My guess is that cdindex may mean census data index and cdid may refer to census data id? I believe ns is the number of simulations 
+    @unpack ns, cdindex, cdid = data 
     eg = expmu .* kronecker(ones(1, ns), expmval)
     temp = cumsum(eg, dims=1) #rather unfortunate function name
     #i'm assuming we want the sum along the first dimension (i.e. add up each column)
