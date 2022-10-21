@@ -37,18 +37,6 @@ SummarizeMarkups(30.0, cereal)
 # Post-Nabisco (3,6)
 # GM -Quaker (2,4)
 
-function NewOwnership(firms, firm1, firm2)
-    # generate ownership matrix that merges two firms
-
-    for (i, firm) in enumerate(firms)
-        if firm == firm2
-            firms[i] = firm1
-        end
-    end
-
-    return firms
-end
-
 
 Ωstar = OwnershpMatrix(cereal.firm) # post-nabisco merger
 H = ComputeElasticites(30.0, cereal.share, cereal.market)

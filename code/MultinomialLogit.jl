@@ -56,6 +56,20 @@ function SummarizeMarkups(α::Float64, cereal::DataFrame)
             stdevs]
 end
 
+function NewOwnership(firms, firm1, firm2)
+    # generate ownership matrix that merges two firms
+
+    for (i, firm) in enumerate(firms)
+        if firm == firm2
+            firms[i] = firm1
+        end
+    end
+
+    return firms
+end
+
+
+
 function SimulateMerger(own, mc, p0, s0, α, market; tol = 1e-8, err = 100, max_iter = 10000)
     s = s0 # initial vector of shares
     i = 0
