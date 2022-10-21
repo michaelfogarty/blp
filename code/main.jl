@@ -9,11 +9,15 @@ add(x,y) = x .+ y
 transform!(cereal, [:id, :quarter] => add => :id)
 
 # calculate outside option market shares
+complement(x) = 1.0 .- x
+
 cereal =
     @pipe cereal |>
     groupby(_, [:city, :year, :quarter]) |>
     combine(_, :share => sum => :outside_share) |>
+    transform!(_, :outside_share => complement => :outside_share) |>
     leftjoin(_, cereal, on = [:city, :year, :quarter])
+    
 
 # create unique market (city x year x quarter) IDs 
 cereal.market = groupby(cereal, [:city, :year, :quarter]).groups;
