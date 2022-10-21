@@ -1,6 +1,3 @@
-#note: we need to load the SparseArrays module in the main file to allow for the creation of a sparse array here
-using SparseArrays
-
 function cr_dim(long_id)
     #this function creates a set of dummies for each of the values defined by long_id
 
