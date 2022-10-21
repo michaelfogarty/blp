@@ -1,4 +1,3 @@
-using Kronecker
 function ind_sh(expmval, expmu, res::Results, data::Data)
     @unpack ns, cdindex, cdid = data 
     eg = expmu .* kronecker(ones(1, ns), expmval)
