@@ -1,4 +1,4 @@
-function cr_dim(long_id)
+function cr_dumm(long_id)
     #this function creates a set of dummies for each of the values defined by long_id
 
     b = sort(long_id)
