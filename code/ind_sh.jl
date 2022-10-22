@@ -1,4 +1,4 @@
-function ind_sh(expmval, expmu, res::Results, data::Data)
+function ind_sh(expmval, expmu, data::Data)
     @unpack ns, cdindex, cdid = data 
     eg = expmu .* kronecker(ones(1, ns), expmval)
     temp = cumsum(eg, dims=1) #rather unfortunate function name

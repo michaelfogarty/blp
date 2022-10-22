@@ -1,6 +1,6 @@
 
 function gmmobjg(theta2, res::Results, data::Data)
-    @unpack invA, theta1, theti, thetj, x1, IV = data #unpack data objects from data struct
+    @unpack invA, theta_i, theta_j, x1, IV = data #unpack data objects from data struct
     delta = meanval(theta2) #calls the meanval function 
     
     if maximum((delta .== NaN)) ==1
