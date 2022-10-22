@@ -9,12 +9,18 @@ function gmmobjg(theta2, res::Results, data::Data)
         temp1 = x1'*IV
         temp2 = delta'*IV
         theta1 = inv(temp1*invA*temp1')*temp1*invA*temp2
+        res.theta1 = theta1 # save theta1 in results struct as well
         gmmresid = delta - x1*theta1
         res.gmmresid = gmmresid #this is my addition: we want to save our gmm residuals in the results struct
         temp1 = gmmresid'*IV
         f1 = temp1*invA*temp1'
         f = f1
         if nargout > 1
+            # so I think that gmmobjg needs to be single valued 
+            # for optimization purpposes, but we can put df into
+            # the results struct without problem
+            # also nargout is matlab-ese that we need to
+            # get rid of here
             @unpack mvalold = res
             temp = jacob(mvalold, theta2)'
             df = 2*temp*IV*invA*IV'*gmmresid
