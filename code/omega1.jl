@@ -1,3 +1,4 @@
+using LinearAlgebra
 function omega1(p,shar_i,alpha_i,own_dum)
 #
 #inputs:		p--price(over which we will perform a search);
@@ -8,8 +9,8 @@ function omega1(p,shar_i,alpha_i,own_dum)
 
     n=24
     o1=(ones(n)*alpha_i') .* shar_i*shar_i'
-    o2=diagm(sum(((ones(n)*alpha_i').*shar_i)'))
-    omega=(o2-o1)/ns
+    o2=diagm(((ones(n)*fill(alpha_i, 24)')*shar_i)) 
+    omega=(o2-o1)#original code divided by 20
     f = omega.*(own_dum)
     f
 end
