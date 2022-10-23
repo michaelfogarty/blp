@@ -1,4 +1,4 @@
-function mufunc(theta2w::Array{Float64,2}, res::Results, data::Data)
+function mufunc(theta2w::Array{Float64,2}, data::Data)
     # compute nonlinear portion of utility (μ_ijt)
     @unapck x2, ns, vfull, dfull = data
 

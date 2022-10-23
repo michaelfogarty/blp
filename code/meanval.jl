@@ -16,7 +16,7 @@ function meanval(theta2, res::Results, data::Data)
 
     # here we need to turn the theta2 vector into a matrix
     theta2w = Array(sparse(theta_i,theta_j,theta2));
-    expmu = exp(mufunc(x2,theta2w));
+    expmu = exp(mufunc(x2, theta2w, data));
     norm = 1;
     avgnorm = 1;
     

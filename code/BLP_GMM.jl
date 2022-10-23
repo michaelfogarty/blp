@@ -5,7 +5,8 @@ Random.seed!(104) # set seet for RNG repeatability
 include("cr_dumm.jl")
 
 cereal = CSV.read("data/cereal.csv", DataFrame)
-demographics = CSV.read("data/demographics.csv", DataFrame)
+demographics = CSV.read("data/demog.csv", DataFrame, header = false)
+v = CSV.read("data/v.csv", DataFrame)
 
 # Data cleaning
 add(x,y) = x .+ y
@@ -25,12 +26,6 @@ cereal =
 # create unique market (city x year x quarter) IDs 
 cereal.market = groupby(cereal, [:city, :year, :quarter]).groups;
 
-# recreate objects from Matlab code
-
-# need to create: 
-# - vfull
-# - dfull
-# - x2 (nonlinear part of data)
 
 @with_kw struct Data
 
@@ -54,13 +49,14 @@ cereal.market = groupby(cereal, [:city, :year, :quarter]).groups;
     IV::Array{Float64, 2} = hcat(iv, x1[:, 2:end]);
     invA::Array{Float64, 2} = inv(IV' * IV);
 
-    # demographics
-    # are the v's in the demographics the v's in the matlab code or the d's?
-    d::Array{Float64, 2} = Matrix(demographics[:, [string("v", x) for x in 1:80]])
-    dfull::Array{Float64, 2} = repeat(v, inner = (nbrn, 1), outer = (1,1))
-    vfull::Array{Float64, 2} = randn(nbrn*nmkt, 80)
+    # demographics and random draws
+    v::Array{Float64, 2} = Matrix(v[:, [string("v", x) for x in 1:80]])
+    vfull::Array{Float64, 2} = repeat(v, inner = (nbrn, 1), outer = (1,1))
+    d::Array{Float64, 2} = Matrix(demographics)
+    dfull::Array{Float64, 2} = repeat(d, inner = (nbrn, 1), outer = (1,1))
 
-    # parameters in the Θ matrix
+
+    # parameters in the θ matrix - Initial values
     theta2w::Array{Float64, 2} = [0.3772    3.0888         0    1.1859         0;
                                   1.8480   16.5980    -.6590         0   11.6245;
                                   -0.0035  -0.1925         0    0.0296         0;
@@ -85,17 +81,7 @@ function Initialize(data::Data)
 
     # Initial parameter values
     theta2 = data.theta2
+    theta1 = zeros() # what size will this be?
 
-    Results(theta2w,)
+    Results(theta2,)
 end
-
-
-theta2w = [0.3772    3.0888         0    1.1859         0;
-1.8480   16.5980    -.6590         0   11.6245;
--0.0035   -0.1925         0    0.0296         0;
-0.0810    1.4684         0   -1.5143         0];
-theta2w = sparse(theta2w)
-
-theta_i, theta_j, theta2 = findnz(theta2w)
-
-theta_i
