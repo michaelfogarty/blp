@@ -6,14 +6,14 @@
 #function accepts theta2 and results struct
 function var_cov(theta2, res::Results, data::Data)
     @unpack mvalold, ps2, gmmresid = res
-    @unpack x1 = data
-    N = length(x1[:,1]) #guessing we want the number of observations in x1
-    Z = length(IV[:,2]) #I'm guessing we want the number of instruments
-    temp = jacob(mvalold, theta2) #call the jacobian function and see what's up
+    @unpack x1, IV = data
+
+    N,Z = size(x1,1), size(IV, 2)
+    temp = jacob(mval, theta2, data) #call the jacobian function and see what's up
     a = [x1 temp]' * IV
     IVres = IV .* (gmmresid * ones(Z))
     b = IVres'*IVres 
 
     f = inv(a*invA*a')*a*invA*b*invA*a'*inv(a*invA*a') #I am assuming we want this boi returned
-    f #return :)
+    return f #return :)
 end

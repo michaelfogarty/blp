@@ -78,10 +78,13 @@ end
 
 function Initialize(data::Data)
     # initialize results struct
+    @unpack ns, nbrn, nmkt = data
 
     # Initial parameter values
     theta2 = data.theta2
     theta1 = zeros() # what size will this be?
+
+    mval = zeros(nbrn * nmkt)
 
     Results(theta2,)
 end

@@ -21,8 +21,8 @@ function gmmobjg(theta2, res::Results, data::Data)
             # the results struct without problem
             # also nargout is matlab-ese that we need to
             # get rid of here
-            @unpack mvalold = res
-            temp = jacob(mvalold, theta2)'
+            @unpack mval = res
+            temp = jacob(mval, theta2, data)'
             df = 2*temp*IV*invA*IV'*gmmresid
         end
     end
