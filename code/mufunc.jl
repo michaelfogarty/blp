@@ -1,6 +1,6 @@
 function mufunc(theta2w::Array{Float64,2}, data::Data)
     # compute nonlinear portion of utility (μ_ijt)
-    @unapck x2, ns, vfull, dfull = data
+    @unpack x2, ns, vfull, dfull = data
 
     n,k = size(x2, 1), size(x2,2);
     j = size(theta2w,2)-1;

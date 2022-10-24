@@ -1,14 +1,14 @@
 
 function gmmobjg(theta2, res::Results, data::Data)
     @unpack invA, theta_i, theta_j, x1, IV = data #unpack data objects from data struct
-    delta = meanval(theta2) #calls the meanval function 
+    delta = meanval(theta2, res, data) #calls the meanval function 
     
     if maximum((delta .== NaN)) ==1
         f = 1e10
     else
         temp1 = x1'*IV
         temp2 = delta'*IV
-        theta1 = inv(temp1*invA*temp1')*temp1*invA*temp2
+        theta1 = inv(temp1*invA*temp1')*temp1*invA*temp2'
         res.theta1 = theta1 # save theta1 in results struct as well
         gmmresid = delta - x1*theta1
         res.gmmresid = gmmresid #this is my addition: we want to save our gmm residuals in the results struct
