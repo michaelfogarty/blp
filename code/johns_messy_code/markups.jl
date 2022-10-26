@@ -66,19 +66,6 @@ function Initialize()
 end
 
 res = Initialize()
-#I think this is all of them lol
-include("mufunc.jl")
-include("meanval.jl")
-include("gmm.jl")
-include("jacob.jl")
-include("ind_sh.jl")
-include("mktsh.jl")
-include("var_cov.jl")
-include("ols.jl")
-include("IV.jl")
-include("Mergers.jl")
-
-
 function iv_initial(data::Data, res::Results)
     @unpack x1, IV, invA,s_jt,y = data
     mid = x1'*IV*invA*IV'
@@ -86,23 +73,22 @@ function iv_initial(data::Data, res::Results)
     mvalold = x1*t
     res.mvalold = exp.(mvalold)
 end
-#need to run this to get the initial predicted market shares 
 iv_initial(Data(), res)
 #sh_test = mktsh(res.mvalold, exp.(mufunc(Data().x2, Data().theta2w, Data())), Data())
 #mv = meanval(Data(), res)
 
-#f, df = gmmobj(Data(), res)
+#f, df = gmmobj(res.theta2, Data(), res)
 
 @unpack theti, thetj,x1, x2, IV, invA= Data()
 
 opt = optimize(theta2 ->  -gmmobj(theta2, Data(), res)[1][1], res.theta2)
 theta2 = opt.minimizer
 vcov = var_cov(Data(), res)
-###I'm cheating rn; remove the absolute value!
+###I'm cheating rn; remove the absolute value! 
 se = sqrt.(diag(abs.(vcov)))
 theta2w = Array(sparse(theti, thetj,theta2 ))
 t = size(se,1) - size(theta2,1)
-se2w = Array(sparse(theti, thetj, se[t+1:size(se,1)]))
+se2w = Array(sparse(theti, thetj, se[t+1:size]))
 
 omega = inv(vcov[2:25, 2:25])
 xmd = [x2[1:24,1] x2[1:24, 3:4]]
@@ -229,6 +215,12 @@ display(fig)
 
 fig = plot([cumsum(s_pre, dims=1)[94,:]/94, cumsum(s_t, dims=1)[94,:]/94])
 
+nmkt = 94
+nbrn = 24
+cdid = kronecker(1:nmkt,ones(Int64,nbrn,1))
+cdindex = nbrn:nbrn:nbrn*nmkt   
+
+
 
 b_OLS, se_OLS = ols(y, cereal_a[:,9],1)
 b_IV, se_IV = regressIV(y, cereal_a[:,9], zeros(24*94), cereal_a[:,12:21],1)
@@ -242,3 +234,13 @@ invA = inv(Array(IV)'*Array(IV))
 
 
 
+
+meanval
+#find BLP contraction
+
+#call GMM function
+
+theta2w =    [0.3772    3.0888         0    1.1859         0;
+             1.8480   16.5980    -.6590         0   11.6245;
+            -0.0035   -0.1925         0    0.0296         0;
+             0.0810    1.4684         0   -1.5143         0]
