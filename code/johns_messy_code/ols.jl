@@ -6,7 +6,7 @@ function ols(y, X, fid)
         K = size(X, 2)
         se2 = (e'*e)./(N - K)
         varb = se2.*inv(X'*X)
-        seb = varb.^(1/2)
+        seb = varb[1].^(1/2)
         R2 = 1.0 .- sum(e'*e)/sum((y .- mean(y)).^2)
         adjR2 = 1 .- ((N-1)/(N - K))*(1 .-R2)
         return b, seb, R2, adjR2

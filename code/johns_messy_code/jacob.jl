@@ -3,7 +3,7 @@ function jacob(data::Data, res::Results)
     @unpack theti, thetj, theta2, mvalold = res
     theta2w = Array(sparse(theti, thetj, theta2))
     expmu = exp.(mufunc(x2, theta2w, data)) #
-    shares = ind_sh(mvalold, expmu, data)[:,:,1]
+    shares = ind_sh(mvalold, expmu, data)
 
     n, K = size(x2)
     J = size(theta2w, 2)-1
@@ -14,7 +14,8 @@ function jacob(data::Data, res::Results)
         temp = cumsum(xv .*shares, dims=1)
         sum1 = temp[cdindex,:]
         sum1[2:size(sum1,1),:] = diff(sum1, dims=1)
-        f1[:,i] .= mean((shares .*(xv .- sum1[cdid])))'
+        s1_cdid = repeat(sum1, inner=(24,1), outer=(1,1))
+        f1[:,i] .= mean((shares .*(xv .- s1_cdid)))'
     end
     for j=1:J
         d = dfull[:, ns*(j-1)+1:ns*j]
@@ -24,7 +25,8 @@ function jacob(data::Data, res::Results)
             temp = cumsum(xd .*shares, dims=1)
             sum1 = temp[cdindex,:]
             sum1[2:size(sum1,1), :] = diff(sum1, dims=1)
-            temp1[:,i] .= mean((shares .*(xd .- sum1[cdid,:])))'
+            s1_cdid = repeat(sum1, inner=(24,1), outer=(1,1))
+            temp1[:,i] .= mean((shares .*(xd .- s1_cdid)))'
         end
         f1[:, K*j + 1:K*(j+1)] = temp1
     end
