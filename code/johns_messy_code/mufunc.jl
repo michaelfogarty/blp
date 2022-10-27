@@ -8,5 +8,6 @@ function mufunc(x2::Array{Float64,2}, theta2w::Array{Float64,2}, data::Data)
         d_i = dfull[:, i:ns:ns*j]
         mu[:,i] = (x2 .* v_i * theta2w[:,1]) + x2 .*(d_i *theta2w[:, 2:j+1]') * ones(k)
     end
+    mu = zeros(n, ns)
     mu
 end

@@ -18,14 +18,13 @@ function meanval(data::Data, res::Results)
     mval=zeros(3)
     while norm>tol*10^(flag*floor(i/50)) && avgnorm > 1e-3*tol*10^(flag*floor(i/50))
         #println(i)
-        ###NOTE: CHANGE THIS BACK######
-        mval = mvalold .*s_jt ./mktsh(mvalold, fill(1.0, 94*24,20), data) #log.(s_jt) .- log.(mktsh(mvalold, expmu, data)) #
+        mval = mvalold .*s_jt ./mktsh(mvalold, expmu, data) #log.(s_jt) .- log.(mktsh(mvalold, expmu, data)) #
         #println(mktsh(mvalold, expmu, data))
         t = abs.(mval-mvalold)
         norm = maximum(t)
         avgnorm = mean(t)
    
-            println(i, ", norm: ", norm, ", avgnorm: ", avgnorm)
+            #println(i, ", norm: ", norm, ", avgnorm: ", avgnorm)
         
         mvalold = mval
         i += 1

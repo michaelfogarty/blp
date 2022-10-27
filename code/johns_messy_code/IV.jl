@@ -7,7 +7,7 @@ function regressIV(y, X, Z, fid)
     b = inv(mid*X)*mid*y
     #b = inv(Xhat'*Xhat)*Xhat'y
     e = y - X*b
-    println((e'* e)[1,1])
+    #println((e'* e)[1,1])
     N = size(X,1)
     K = size(X,2)
     se2 = (e'*e)[1,1]/(N - K)

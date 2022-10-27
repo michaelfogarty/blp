@@ -2,8 +2,7 @@ function jacob(data::Data, res::Results)
     @unpack ns, cdid, cdindex, x1, x2, vfull, dfull = data
     @unpack theti, thetj, theta2, mvalold = res
     theta2w = Array(sparse(theti, thetj, theta2))
-    ###CHANGE THIS BACK
-    expmu = fill(1.0, 94*24,20) #exp.(mufunc(x2, theta2w, data)) #
+    expmu = exp.(mufunc(x2, theta2w, data)) #
     shares = ind_sh(mvalold, expmu, data)[:,:,1]
 
     n, K = size(x2)
