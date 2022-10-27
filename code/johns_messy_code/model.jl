@@ -21,7 +21,7 @@ outshr_copied = kronecker(outshr, ones(24))
     x1 ::Array{Float64, 2} = hcat(cereal[:,9], brand_dummies)
     x2 ::Array{Float64,2} = hcat(ones(nmkt*nbrn), cereal[:, 9:11]) #x2 consists of an intercept term, prices, sugar content, and mushy dummy
 
-    IV ::Array{Float64,2} = hcat(cereal[:,12:21], brand_dummies)
+    IV ::Array{Float64,2} = hcat(cereal[:,12:31], brand_dummies)
     invA::Array{Float64,2} = inv(Array(IV)'*Array(IV))
 
     cdid::Kronecker.KroneckerProduct{Int64} = kronecker(1:nmkt,ones(Int64,nbrn,1))
@@ -90,11 +90,21 @@ iv_initial(Data(), res)
 #sh_test = mktsh(res.mvalold, exp.(mufunc(Data().x2, Data().theta2w, Data())), Data())
 mv = meanval(Data(), res)
 
-f= gmmobj(res.theta2,Data(), res)
+f= gmmobj(res.theta2,Data(), res,1)[2]
+
+function gmm_wrapper(theta2)
+    val = -gmmobj(theta2, Data(), res, 1)[1][1]
+    val
+end
+function g!(storage, theta2)
+    storage = gmmobj(theta2, Data(), res, 1)[2]
+    #val = vec(val)
+    #val
+end
 
 @unpack theti, thetj,x1, x2, IV, invA= Data()
 function gmm_estimation()
-    opt = optimize(theta2 ->  -gmmobj(theta2, Data(), res,0)[1], res.theta2, BFGS())
+    opt = optimize(gmm_wrapper, g!, res.theta2, BFGS())
     theta2 = opt.minimizer
     #theta2 = res.theta2
     varcov = var_cov(Data(), res)
@@ -108,7 +118,7 @@ function gmm_estimation()
     xmd = [x2[1:24,1] x2[1:24, 3:4]]
 
     delta = meanval(Data(),res)
-    println("***", delta)
+     #println("***", delta)
     temp1 = x1'*IV;
     temp2 = delta'*IV;
     theta1 = inv(temp1*invA*temp1')*temp1*invA*temp2';
@@ -125,6 +135,7 @@ function gmm_estimation()
     for i=1:size(theta2w,1)
         println(mcoef[i], theta2w[i,:])
         println(semcoef[i], se2w[i,:])
+        println("R^2: $(Rsq), adj R^2: $(Rsq_G), Chisq)
     end
 end
 gmm_estimation()
@@ -132,19 +143,19 @@ gmm_estimation()
 
 
 
-res.theta2 = [0.3772
-1.8480
--0.0035
-0.0810
-3.0888
-16.5980
--0.1926
-1.4684
--0.6590
-1.1859
-0.0295
--1.5143
-11.6245]
+#res.theta2 = [0.3772
+#1.8480
+#-0.0035
+#0.0810
+#3.0888
+##16.5980
+#-0.1926
+#1.4684
+#-0.6590
+#1.1859
+#0.0295
+#-1.5143
+#11.6245]
 
 function alpha_finder(data::Data, res::Results, α_mean)
     @unpack ns, nmkt, nbrn, x1, x2, theti, thetj, vfull, dfull = data
@@ -164,7 +175,7 @@ end
 
 theta2w = Array(sparse(theti, thetj,res.theta2))
 delta = meanval(Data(), res)
-a_mat = alpha_finder(Data(), res, -32.4374)
+a_mat = alpha_finder(Data(), res, -32.497106)
 expmu = exp.(mufunc(x2, theta2w, Data()))
 pred_shares = ind_sh(exp.(delta), expmu, Data())
 
